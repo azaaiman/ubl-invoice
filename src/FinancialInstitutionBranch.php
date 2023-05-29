@@ -9,6 +9,8 @@ class FinancialInstitutionBranch implements XmlSerializable
 {
     private $id;
 
+    private $financialInstitution;
+
     /**
      * @return string
      */
@@ -27,10 +29,35 @@ class FinancialInstitutionBranch implements XmlSerializable
         return $this;
     }
 
+    /**
+     * @return FinancialInstitution|null
+     */
+    public function getFinancialInstitution()
+    {
+        return $this->financialInstitution;
+    }
+
+    /**
+     * @param FinancialInstitution|null $financialInstitution
+     */
+    public function setFinancialInstitution(FinancialInstitution $financialInstitution): FinancialInstitutionBranch
+    {
+        $this->financialInstitution = $financialInstitution;
+        return $this;
+    }
+
     public function xmlSerialize(Writer $writer): void
     {
-        $writer->write([
-            Schema::CBC . 'ID' => $this->id
-        ]);
+        if (isset($this->id)) {
+            $writer->write([
+                Schema::CBC . 'ID' => $this->id
+            ]);
+        }
+
+        if (isset($this->financialInstitution)) {
+            $writer->write([
+                Schema::CAC . 'FinancialInstitution' => $this->financialInstitution
+            ]);
+        }
     }
 }
