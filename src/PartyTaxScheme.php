@@ -11,6 +11,7 @@ class PartyTaxScheme implements XmlSerializable
 {
     private $registrationName;
     private $companyId;
+    private $companyIdAttributes = [];
     private $taxScheme;
 
     /**
@@ -43,9 +44,12 @@ class PartyTaxScheme implements XmlSerializable
      * @param string $companyId
      * @return PartyTaxScheme
      */
-    public function setCompanyId($companyId): PartyTaxScheme
+    public function setCompanyId($companyId, $attributes = null): PartyTaxScheme
     {
         $this->companyId = $companyId;
+        if (isset($attributes)) {
+            $this->companyIdAttributes = $attributes;
+        }
         return $this;
     }
 
@@ -96,7 +100,9 @@ class PartyTaxScheme implements XmlSerializable
         }
         if ($this->companyId !== null) {
             $writer->write([
-                Schema::CBC . 'CompanyID' => $this->companyId
+                'name' => Schema::CBC . 'CompanyID',
+                'value' => $this->companyId,
+                'attributes' => $this->companyIdAttributes
             ]);
         }
 

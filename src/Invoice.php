@@ -2,11 +2,10 @@
 
 namespace NumNum\UBL;
 
-use Sabre\Xml\Writer;
-use Sabre\Xml\XmlSerializable;
-
 use DateTime;
 use InvalidArgumentException;
+use Sabre\Xml\Writer;
+use Sabre\Xml\XmlSerializable;
 
 class Invoice implements XmlSerializable
 {
@@ -18,6 +17,7 @@ class Invoice implements XmlSerializable
     private $copyIndicator;
     private $issueDate;
     protected $invoiceTypeCode = InvoiceTypeCode::INVOICE;
+    private $invoiceTypeCodeAttributes = [];
     private $note;
     private $taxPointDate;
     private $dueDate;
@@ -33,6 +33,7 @@ class Invoice implements XmlSerializable
     private $allowanceCharges;
     private $additionalDocumentReferences = [];
     private $documentCurrencyCode = 'EUR';
+    private $documentCurrencyCodeAttributes = [];
     private $buyerReference;
     private $accountingCostCode;
     private $invoicePeriod;
@@ -155,9 +156,12 @@ class Invoice implements XmlSerializable
      * @param mixed $currencyCode
      * @return Invoice
      */
-    public function setDocumentCurrencyCode(string $currencyCode = 'EUR'): Invoice
+    public function setDocumentCurrencyCode(string $currencyCode = 'EUR', $attributes = null): Invoice
     {
         $this->documentCurrencyCode = $currencyCode;
+        if (isset($attributes)) {
+            $this->documentCurrencyCodeAttributes = $attributes;
+        }
         return $this;
     }
 
@@ -174,9 +178,12 @@ class Invoice implements XmlSerializable
      * See also: src/InvoiceTypeCode.php
      * @return Invoice
      */
-    public function setInvoiceTypeCode(string $invoiceTypeCode): Invoice
+    public function setInvoiceTypeCode(string $invoiceTypeCode, $attributes = null): Invoice
     {
         $this->invoiceTypeCode = $invoiceTypeCode;
+        if (isset($attributes)) {
+            $this->invoiceTypeCodeAttributes = $attributes;
+        }
         return $this;
     }
 
@@ -593,7 +600,9 @@ class Invoice implements XmlSerializable
 
         if ($this->invoiceTypeCode !== null) {
             $writer->write([
-                Schema::CBC . $this->xmlTagName . 'TypeCode' => $this->invoiceTypeCode
+                'name' => Schema::CBC . $this->xmlTagName . 'TypeCode',
+                'value' => $this->invoiceTypeCode,
+                'attributes' => $this->invoiceTypeCodeAttributes
             ]);
         }
 
@@ -610,7 +619,9 @@ class Invoice implements XmlSerializable
         }
 
         $writer->write([
-            Schema::CBC . 'DocumentCurrencyCode' => $this->documentCurrencyCode,
+            'name' => Schema::CBC . 'DocumentCurrencyCode',
+            'value' => $this->documentCurrencyCode,
+            'attributes' => $this->documentCurrencyCodeAttributes
         ]);
 
         if ($this->accountingCostCode !== null) {

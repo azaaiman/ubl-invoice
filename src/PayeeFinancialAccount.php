@@ -8,6 +8,7 @@ use Sabre\Xml\XmlSerializable;
 class PayeeFinancialAccount implements XmlSerializable
 {
     private $id;
+    private $idAttributes = [];
     private $name;
     private $financialInstitutionBranch;
 
@@ -24,9 +25,12 @@ class PayeeFinancialAccount implements XmlSerializable
      * @param string $id
      * @return PayeeFinancialAccount
      */
-    public function setId(?string $id): PayeeFinancialAccount
+    public function setId(?string $id, $attributes = null): PayeeFinancialAccount
     {
         $this->id = $id;
+        if (isset($attributes)) {
+            $this->idAttributes = $attributes;
+        }
         return $this;
     }
 
@@ -71,9 +75,7 @@ class PayeeFinancialAccount implements XmlSerializable
         $writer->write([
             'name' => Schema::CBC . 'ID',
             'value' => $this->id,
-            'attributes' => [
-                //'schemeID' => 'IBAN'
-            ]
+            'attributes' => $this->idAttributes
         ]);
 
         if ($this->getName() !== null) {

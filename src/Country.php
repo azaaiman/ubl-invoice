@@ -8,7 +8,8 @@ use Sabre\Xml\XmlSerializable;
 class Country implements XmlSerializable
 {
     private $identificationCode;
-    private $listId;
+    private $listId = 'ISO3166-1:Alpha2';
+    private $listAgencyId;
 
     /**
      * @return mixed
@@ -47,6 +48,23 @@ class Country implements XmlSerializable
     }
 
     /**
+     * @return mixed
+     */
+    public function getListAgencyId()
+    {
+        return $this->listAgencyId;
+    }
+
+    /**
+     * @param mixed $listAgencyId
+     */
+    public function setListAgencyId($listAgencyId): Country
+    {
+        $this->listAgencyId = $listAgencyId;
+        return $this;
+    }
+
+    /**
      * The xmlSerialize method is called during xml writing.
      *
      * @param Writer $writer
@@ -57,7 +75,10 @@ class Country implements XmlSerializable
         $attributes = [];
 
         if (!empty($this->listId)) {
-            $attributes['listID'] = 'ISO3166-1:Alpha2';
+            $attributes['listID'] = $this->listId;
+        }
+        if (!empty($this->listAgencyId)) {
+            $attributes['listAgencyID'] = $this->listAgencyId;
         }
 
         $writer->write([

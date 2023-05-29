@@ -8,6 +8,7 @@ use Sabre\Xml\XmlSerializable;
 class TaxScheme implements XmlSerializable
 {
     private $id;
+    private $idAttributes = [];
     private $taxTypeCode;
     private $name;
 
@@ -23,9 +24,12 @@ class TaxScheme implements XmlSerializable
      * @param string $id
      * @return TaxScheme
      */
-    public function setId(string $id): TaxScheme
+    public function setId(string $id, $attributes = null): TaxScheme
     {
         $this->id = $id;
+        if (isset($attributes)) {
+            $this->idAttributes = $attributes;
+        }
         return $this;
     }
 
@@ -74,7 +78,11 @@ class TaxScheme implements XmlSerializable
     public function xmlSerialize(Writer $writer): void
     {
         $writer->write([
-            Schema::CBC . 'ID' => $this->id
+            [
+                'name' => Schema::CBC . 'ID',
+                'value' => $this->getId(),
+                'attributes' => $this->idAttributes,
+            ],
         ]);
         if ($this->taxTypeCode !== null) {
             $writer->write([
