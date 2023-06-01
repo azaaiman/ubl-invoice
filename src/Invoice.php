@@ -640,27 +640,21 @@ class Invoice implements XmlSerializable
             'attributes' => $this->documentCurrencyCodeAttributes
         ]);
 
-        if ($this->accountingCost !== null) {
-            $writer->write([
-                Schema::CBC . 'AccountingCost' => $this->accountingCost
-            ]);
-        }
-
         if ($this->accountingCostCode !== null) {
             $writer->write([
                 Schema::CBC . 'AccountingCostCode' => $this->accountingCostCode
             ]);
         }
 
-        if ($this->buyerReference != null) {
+        if ($this->accountingCost !== null) {
             $writer->write([
-                Schema::CBC . 'BuyerReference' => $this->buyerReference
+                Schema::CBC . 'AccountingCost' => $this->accountingCost
             ]);
         }
 
-        if ($this->contractDocumentReference !== null) {
+        if ($this->buyerReference != null) {
             $writer->write([
-                Schema::CAC . 'ContractDocumentReference' => $this->contractDocumentReference,
+                Schema::CBC . 'BuyerReference' => $this->buyerReference
             ]);
         }
 
@@ -673,6 +667,12 @@ class Invoice implements XmlSerializable
         if ($this->orderReference != null) {
             $writer->write([
                 Schema::CAC . 'OrderReference' => $this->orderReference
+            ]);
+        }
+
+        if ($this->contractDocumentReference !== null) {
+            $writer->write([
+                Schema::CAC . 'ContractDocumentReference' => $this->contractDocumentReference,
             ]);
         }
 
