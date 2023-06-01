@@ -35,6 +35,7 @@ class Invoice implements XmlSerializable
     private $documentCurrencyCode = 'EUR';
     private $documentCurrencyCodeAttributes = [];
     private $buyerReference;
+    private $accountingCost;
     private $accountingCostCode;
     private $invoicePeriod;
     private $delivery;
@@ -449,6 +450,21 @@ class Invoice implements XmlSerializable
         return $this;
     }
 
+    public function getAccountingCost(): ?string
+    {
+        return $this->accountingCost;
+    }
+
+    /**
+     * @param mixed $accountingCost
+     * @return Invoice
+     */
+    public function setAccountingCost(string $accountingCost): Invoice
+    {
+        $this->accountingCost = $accountingCost;
+        return $this;
+    }
+
     /**
      * @return InvoicePeriod
      */
@@ -623,6 +639,12 @@ class Invoice implements XmlSerializable
             'value' => $this->documentCurrencyCode,
             'attributes' => $this->documentCurrencyCodeAttributes
         ]);
+
+        if ($this->accountingCost !== null) {
+            $writer->write([
+                Schema::CBC . 'AccountingCost' => $this->accountingCost
+            ]);
+        }
 
         if ($this->accountingCostCode !== null) {
             $writer->write([
